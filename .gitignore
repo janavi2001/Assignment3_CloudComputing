@@ -1,0 +1,26 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
+.env
+.env.*
+venv/
+*.db
+*.sqlite3
+.DS_Store
+
+# Docker
+docker-compose.override.yml
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# Terraform generated files
+deploy/aws/.terraform/
+deploy/aws/terraform.tfstate
+deploy/aws/terraform.tfstate.backup
+deploy/aws/tfplan
