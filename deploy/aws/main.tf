@@ -176,8 +176,8 @@ resource "aws_security_group" "ecs" {
   vpc_id      = aws_vpc.main.id
 
   ingress {
-    from_port       = 8000
-    to_port         = 8000
+    from_port       = 8080
+    to_port         = 8080
     protocol        = "tcp"
     security_groups = [aws_security_group.alb.id]
   }
@@ -260,11 +260,15 @@ resource "aws_lb" "main" {
 }
 
 resource "aws_lb_target_group" "main" {
-  name        = "flask-api-tg"
-  port        = 8000
+  name_prefix = "fatg-"
+  port        = 8080
   protocol    = "HTTP"
   vpc_id      = aws_vpc.main.id
   target_type = "ip"
+
+  lifecycle {
+    create_before_destroy = true
+  }
 
   health_check {
     enabled             = true
@@ -366,8 +370,8 @@ resource "aws_ecs_task_definition" "main" {
       image = "${aws_ecr_repository.flask_app.repository_url}:latest"
       portMappings = [
         {
-          containerPort = 8000
-          hostPort      = 8000
+          containerPort = 8080
+          hostPort      = 8080
           protocol      = "tcp"
         }
       ]
@@ -388,7 +392,7 @@ resource "aws_ecs_task_definition" "main" {
       healthCheck = {
         command = [
           "CMD-SHELL",
-          "curl -f http://localhost:8000/health || exit 1"
+          "curl -f http://localhost:8080/health || exit 1"
         ]
         interval    = 30
         timeout     = 5
@@ -420,7 +424,7 @@ resource "aws_ecs_service" "main" {
   load_balancer {
     target_group_arn = aws_lb_target_group.main.arn
     container_name   = "flask-api"
-    container_port   = 8000
+    container_port   = 8080
   }
 
   depends_on = [aws_lb_listener.main]
