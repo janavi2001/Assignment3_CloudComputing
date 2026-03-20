@@ -70,14 +70,14 @@ else
       --db-instance-identifier "$RDS_DB_INSTANCE_ID" \
       --db-instance-class "$RDS_INSTANCE_CLASS" \
       --engine postgres \
-      --engine-version "16.1" \
+      --engine-version "16" \
       --master-username "$RDS_USER" \
       --master-user-password "$RDS_DB_PASSWORD" \
       --db-name "$RDS_DB_NAME" \
       --allocated-storage 20 \
       --storage-type gp3 \
-      --publicly-accessible true \
-      --multi-az false \
+      --publicly-accessible \
+      --no-multi-az \
       --region "$AWS_REGION" \
       --no-enable-iam-database-authentication
     
